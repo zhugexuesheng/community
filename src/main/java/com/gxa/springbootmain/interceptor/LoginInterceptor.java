@@ -33,16 +33,16 @@ public class LoginInterceptor implements HandlerInterceptor {
         System.out.println("preHandle getRequestURI=" + httpServletRequest.getRequestURI());
         System.out.println(o);
         System.out.println("yongHu=" + yongHu);
-        if(yongHu == null) {
-            httpServletResponse.sendRedirect("/login.html");  // 这种演示是保证页面在当前服务器中的情况
-            // {code:250, msg:"请登录之后再访问", url:"/login.html"}
-            return false;
-        }
-        else {
-            return true;
-        }
+//        if(yongHu == null) {
+//            httpServletResponse.sendRedirect("/login.html");  // 这种演示是保证页面在当前服务器中的情况
+//            // {code:250, msg:"请登录之后再访问", url:"/login.html"}
+//            return false;
+//        }
+//        else {
+//            return true;
+//        }
 
-
+          return true;
     }
 
     @Override
