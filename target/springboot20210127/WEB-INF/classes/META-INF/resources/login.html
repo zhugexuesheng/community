@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>css3炫酷登录页</title>
+  <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
+  <meta name="author" content="Vincent Garreau" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" media="screen" href="denglushucai/css/style.css">
+  <link rel="stylesheet" type="text/css" href="denglushucai/css/reset.css"/>
+</head>
+<body>
+
+<div id="particles-js">
+		<div class="login">
+			<div class="login-top">
+				登录
+			</div>
+			<div class="login-center clearfix">
+				<div class="login-center-img"><img src="denglushucai/img/name.png"/></div>
+				<div class="login-center-input">
+					<input id="yongHuMingCheng" type="text" name="" value="" placeholder="请输入您的用户名" onfocus="this.placeholder=''" onblur="this.placeholder='请输入您的用户名'"/>
+					<div class="login-center-input-text">用户名</div>
+				</div>
+			</div>
+			<div class="login-center clearfix">
+				<div class="login-center-img"><img src="denglushucai/img/password.png"/></div>
+				<div class="login-center-input">
+					<input id="miMa" type="password" name=""value="" placeholder="请输入您的密码" onfocus="this.placeholder=''" onblur="this.placeholder='请输入您的密码'"/>
+					<div class="login-center-input-text">密码</div>
+				</div>
+			</div>
+			<div class="login-button" id="denglu">
+				登陆
+			</div>
+		</div>
+		<div class="sk-rotating-plane"></div>
+</div>
+
+<!-- scripts -->
+<script src="denglushucai/js/particles.min.js"></script>
+<script src="denglushucai/js/app.js"></script>
+<script src="jquery/jquery-3.5.1.js"></script>
+<script>
+    $(function () {
+        $("#denglu").click(function () {
+            var yongHuMingCheng=$("#yongHuMingCheng").val();
+            var miMa=$("#miMa").val();
+            $.ajax({
+                url:"/logon_in",   // 请求路径
+                type:"Post",            // 请求的方式，不区分大小写
+                async:true,             // 是否异步，true是默认值，false为同步请求
+                cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                datatype:"text",        // 返回类型，text文本、html页面、json数据
+                data:{
+                    yongHuMingCheng:yongHuMingCheng,
+                    miMa:miMa
+                },
+                success:function(response){
+                    if(response.code===200){
+                        alert("登录成功");
+                        sessionStorage.setItem('yongHu',JSON.stringify(response.data));
+                        window.location.href="/index.html";
+                    }else{
+                        alert(response.msg);
+                    }
+                },
+                error:function(response){
+                    alert("出错" + response);
+                }
+            });
+        })
+    })
+</script>
+</body>
+</html>

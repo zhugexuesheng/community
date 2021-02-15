@@ -1,0 +1,26 @@
+{
+  "name" : "JueSe",
+  "preName" : "",
+  "comment" : "角色表",
+  "templateGroupName" : "Default",
+  "fullColumn" : [ {
+    "name" : "id",
+    "comment" : null,
+    "type" : null,
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  }, {
+    "name" : "jueSeMingCheng",
+    "comment" : null,
+    "type" : null,
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  } ],
+  "pkColumn" : null,
+  "otherColumn" : null,
+  "savePackageName" : "com.gxa.springbootmain",
+  "savePath" : "./src/main/java/com/gxa/springbootmain",
+  "saveModelName" : "springboot20210127"
+}

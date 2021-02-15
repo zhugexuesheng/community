@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxa.springbootmain.mapper.YongHuXinXiMapper">
+
+    <resultMap type="com.gxa.springbootmain.pojo.YongHuXinXi" id="YongHuXinXiMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="yongHuMing" column="yong_hu_ming" jdbcType="VARCHAR"/>
+        <result property="yongHuTouXiang" column="yong_hu_tou_xiang" jdbcType="VARCHAR"/>
+        <result property="dengLuMing" column="deng_lu_ming" jdbcType="VARCHAR"/>
+        <result property="dengLuMiMa" column="deng_lu_mi_ma" jdbcType="VARCHAR"/>
+        <result property="jiFen" column="ji_fen" jdbcType="INTEGER"/>
+        <result property="shouJi" column="shou_ji" jdbcType="VARCHAR"/>
+        <result property="shengFenZhengHao" column="sheng_fen_zheng_hao" jdbcType="VARCHAR"/>
+        <result property="youXiang" column="you_xiang" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Beas_Column_List">
+        id, yong_hu_ming, yong_hu_tou_xiang, deng_lu_ming, deng_lu_mi_ma, ji_fen, shou_ji, sheng_fen_zheng_hao, you_xiang
+    </sql>
+
+    <!--查询所有主键和名称-->
+    <select id="chaXunAll" resultMap="YongHuXinXiMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.yong_hu_xin_xi
+    </select>
+
+    <!--查询单个-->
+    <select id="chaXunById" resultMap="YongHuXinXiMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.yong_hu_xin_xi
+        where id = #{id}
+    </select>
+
+    <!--根据条件查询当前表的满足条件的个数-->
+    <select id="chaXunCount" resultType="int">
+        select
+        count(id)
+        from jiudianguanli.yong_hu_xin_xi
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="chaXunFenYe" resultMap="YongHuXinXiMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.yong_hu_xin_xi
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+        limit #{xiaBiao},10;
+    </select>
+    <select id="chaXunByYongHuMingAndMima" resultMap="YongHuXinXiMap">
+        select id, yong_hu_ming, yong_hu_tou_xiang, deng_lu_ming, deng_lu_mi_ma, ji_fen, shou_ji, sheng_fen_zheng_hao, you_xiang from yong_hu_xin_xi where deng_lu_ming=#{yongHuMing} and deng_lu_mi_ma=#{mima}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="xinZeng" parameterType="com.gxa.springbootmain.pojo.YongHuXinXi">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','')
+        </selectKey>
+        insert into jiudianguanli.yong_hu_xin_xi(<include refid="Beas_Column_List"/>)
+        values (#{id}, #{yongHuMing}, #{yongHuTouXiang}, #{dengLuMing}, #{dengLuMiMa}, #{jiFen}, #{shouJi},
+        #{shengFenZhengHao}, #{youXiang})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="gengXinById" parameterType="com.gxa.springbootmain.pojo.YongHuXinXi">
+        update jiudianguanli.yong_hu_xin_xi
+        <set>
+            <if test="yongHuMing != null and yongHuMing != ''">
+                yong_hu_ming = #{yongHuMing},
+            </if>
+            <if test="yongHuTouXiang != null and yongHuTouXiang != ''">
+                yong_hu_tou_xiang = #{yongHuTouXiang},
+            </if>
+            <if test="dengLuMing != null and dengLuMing != ''">
+                deng_lu_ming = #{dengLuMing},
+            </if>
+            <if test="dengLuMiMa != null and dengLuMiMa != ''">
+                deng_lu_mi_ma = #{dengLuMiMa},
+            </if>
+            <if test="jiFen != null">
+                ji_fen = #{jiFen},
+            </if>
+            <if test="shouJi != null and shouJi != ''">
+                shou_ji = #{shouJi},
+            </if>
+            <if test="shengFenZhengHao != null and shengFenZhengHao != ''">
+                sheng_fen_zheng_hao = #{shengFenZhengHao},
+            </if>
+            <if test="youXiang != null and youXiang != ''">
+                you_xiang = #{youXiang},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="shanChuById">
+        delete
+        from jiudianguanli.yong_hu_xin_xi
+        where id = #{id}
+    </delete>
+
+</mapper>
