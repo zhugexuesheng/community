@@ -1,17 +1,18 @@
 package com.gxa.springbootmain.service;
 
-import com.gxa.springbootmain.pojo.YongHuXinXi;
+import com.gxa.springbootmain.pojo.TieZhi;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
- * (YongHuXinXi)表服务接口类
+ * (TieZhi)表服务接口类
  *
  * @author zhangyujin
  * @version 1.0
- * @since 2021-02-14 18:04:02
+ * @since 2021-02-15 23:32:23
  */
-public interface YongHuXinXiService {
+public interface TieZhiService {
     /**
      * 根据模糊条件查询总个数
      *
@@ -46,18 +47,18 @@ public interface YongHuXinXiService {
     /**
      * 新增数据
      *
-     * @param yongHuXinXi 实例对象
+     * @param tieZhi 实例对象
      * @return 实例对象
      */
-    Map<String, Object> xinZeng(YongHuXinXi yongHuXinXi);
+    Map<String, Object> xinZeng(TieZhi tieZhi, HttpServletRequest request);
 
     /**
      * 通过ID查询单条数据
      *
-     * @param yongHuXinXi 实例对象
+     * @param tieZhi 实例对象
      * @return 实例对象
      */
-    Map<String, Object> gengXinById(YongHuXinXi yongHuXinXi);
+    Map<String, Object> gengXinById(TieZhi tieZhi);
 
     /**
      * 通过主键删除数据
@@ -66,6 +67,4 @@ public interface YongHuXinXiService {
      * @return 是否成功
      */
     Map<String, Object> shanChuById(String id);
-
-    YongHuXinXi chaXunByToken(String token);
 }

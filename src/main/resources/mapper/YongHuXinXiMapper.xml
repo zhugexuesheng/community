@@ -123,4 +123,14 @@
         select id, yong_hu_ming, yong_hu_tou_xiang, deng_lu_ming, deng_lu_mi_ma, ji_fen, shou_ji, sheng_fen_zheng_hao, you_xiang from yong_hu_xin_xi where deng_lu_ming=#{yongHuMing} and deng_lu_mi_ma=#{mima}
     </select>
 
+    <select id="chaXunBytoken" resultMap="YongHuXinXiMap">
+        select
+               id, yong_hu_ming, yong_hu_tou_xiang,
+               deng_lu_ming, deng_lu_mi_ma, ji_fen, shou_ji,
+               sheng_fen_zheng_hao, you_xiang, token, chuang_jian_shi_jian,
+               xiu_gai_shi_jian
+        from yong_hu_xin_xi
+        where token=#{token}
+    </select>
+
 </mapper>

@@ -1,25 +1,25 @@
 package com.gxa.springbootmain.mapper;
 
-import com.gxa.springbootmain.pojo.YongHuXinXi;
+import com.gxa.springbootmain.pojo.TieZhi;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
- * (YongHuXinXi)表数据库访问层
+ * (TieZhi)表数据库访问层
  *
  * @author zhangyujin
  * @version 1.0
- * @since 2021-02-15 19:21:35
+ * @since 2021-02-16 00:03:14
  */
-public interface YongHuXinXiMapper {
+public interface TieZhiMapper {
 
     /**
      * 查询所有数据
      *
      * @return 返回所有数据
      */
-    List<YongHuXinXi> chaXunAll();
+    List<TieZhi> chaXunAll();
 
     /**
      * 通过ID查询单条数据
@@ -27,7 +27,7 @@ public interface YongHuXinXiMapper {
      * @param id 主键
      * @return 实例对象
      */
-    YongHuXinXi chaXunById(@Param("id") Integer id);
+    TieZhi chaXunById(@Param("id") Integer id);
 
     /**
      * 根据模糊条件查询总个数
@@ -43,22 +43,22 @@ public interface YongHuXinXiMapper {
      * @param mingCheng 需要模糊查询的内容
      * @return 对象列表
      */
-    List<YongHuXinXi> chaXunFenYe(@Param("xiaBiao") int xiaBiao, @Param("mingCheng") String mingCheng);
+    List<TieZhi> chaXunFenYe(@Param("xiaBiao") int xiaBiao, @Param("mingCheng") String mingCheng);
 
     /**
      * 新增数据
      *
-     * @param yongHuXinXi 实例对象
+     * @param tieZhi 实例对象
      */
-    void xinZeng(YongHuXinXi yongHuXinXi);
+    void xinZeng(TieZhi tieZhi);
 
     /**
      * 修改数据
      *
-     * @param yongHuXinXi 实例对象
+     * @param tieZhi 实例对象
      * @return 影响行数
      */
-    int gengXinById(YongHuXinXi yongHuXinXi);
+    int gengXinById(TieZhi tieZhi);
 
     /**
      * 通过主键删除数据
@@ -68,7 +68,4 @@ public interface YongHuXinXiMapper {
      */
     int shanChuById(@Param("id") String id);
 
-    YongHuXinXi chaXunByYongHuMingAndMima(String yongHuMing, String mima);
-
-    YongHuXinXi chaXunBytoken(@Param("token")String token);
 }

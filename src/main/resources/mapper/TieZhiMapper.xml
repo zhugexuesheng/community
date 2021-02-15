@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxa.springbootmain.mapper.TieZhiMapper">
+
+    <resultMap type="com.gxa.springbootmain.pojo.TieZhi" id="TieZhiMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="biaoTi" column="biao_ti" jdbcType="VARCHAR"/>
+        <result property="miaoShu" column="miao_shu" jdbcType="VARCHAR"/>
+        <result property="biaoQian" column="biao_qian" jdbcType="VARCHAR"/>
+        <result property="chuanJianShiJian" column="chuan_jian_shi_jian" jdbcType="TIMESTAMP"/>
+        <result property="chuanJianRen" column="chuan_jian_ren" jdbcType="VARCHAR"/>
+        <result property="yueDuShu" column="yue_du_shu" jdbcType="VARCHAR"/>
+        <result property="pingLunShu" column="ping_lun_shu" jdbcType="VARCHAR"/>
+        <result property="dianZhanShu" column="dian_zhan_shu" jdbcType="VARCHAR"/>
+        <result property="leiXing" column="lei_xing" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Beas_Column_List">
+        id, biao_ti, miao_shu, biao_qian, chuan_jian_shi_jian, chuan_jian_ren, yue_du_shu, ping_lun_shu, dian_zhan_shu, lei_xing
+    </sql>
+
+    <!--查询所有主键和名称-->
+    <select id="chaXunAll" resultMap="TieZhiMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.tie_zhi
+    </select>
+
+    <!--查询单个-->
+    <select id="chaXunById" resultMap="TieZhiMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.tie_zhi
+        where id = #{id}
+    </select>
+
+    <!--根据条件查询当前表的满足条件的个数-->
+    <select id="chaXunCount" resultType="int">
+        select
+        count(id)
+        from jiudianguanli.tie_zhi
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="chaXunFenYe" resultMap="TieZhiMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.tie_zhi
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+        limit #{xiaBiao},10;
+    </select>
+
+    <!--新增所有列-->
+    <insert id="xinZeng" parameterType="com.gxa.springbootmain.pojo.TieZhi">
+<!--        <selectKey keyProperty="id" resultType="String" order="BEFORE">-->
+<!--            select replace(uuid(),'-','')-->
+<!--        </selectKey>-->
+        insert into jiudianguanli.tie_zhi(<include refid="Beas_Column_List"/>)
+        values (#{id}, #{biaoTi}, #{miaoShu}, #{biaoQian}, #{chuanJianShiJian}, #{chuanJianRen}, #{yueDuShu},
+        #{pingLunShu}, #{dianZhanShu}, #{leiXing})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="gengXinById" parameterType="com.gxa.springbootmain.pojo.TieZhi">
+        update jiudianguanli.tie_zhi
+        <set>
+            <if test="biaoTi != null and biaoTi != ''">
+                biao_ti = #{biaoTi},
+            </if>
+            <if test="miaoShu != null and miaoShu != ''">
+                miao_shu = #{miaoShu},
+            </if>
+            <if test="biaoQian != null and biaoQian != ''">
+                biao_qian = #{biaoQian},
+            </if>
+            <if test="chuanJianShiJian != null">
+                chuan_jian_shi_jian = #{chuanJianShiJian},
+            </if>
+            <if test="chuanJianRen != null and chuanJianRen != ''">
+                chuan_jian_ren = #{chuanJianRen},
+            </if>
+            <if test="yueDuShu != null and yueDuShu != ''">
+                yue_du_shu = #{yueDuShu},
+            </if>
+            <if test="pingLunShu != null and pingLunShu != ''">
+                ping_lun_shu = #{pingLunShu},
+            </if>
+            <if test="dianZhanShu != null and dianZhanShu != ''">
+                dian_zhan_shu = #{dianZhanShu},
+            </if>
+            <if test="leiXing != null and leiXing != ''">
+                lei_xing = #{leiXing},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="shanChuById">
+        delete
+        from jiudianguanli.tie_zhi
+        where id = #{id}
+    </delete>
+
+</mapper>

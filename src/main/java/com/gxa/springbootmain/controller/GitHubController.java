@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.UUID;
 
@@ -39,7 +41,7 @@ public class GitHubController {
     private String Client_Uri;
 
     @RequestMapping(value = "/callback",method = RequestMethod.GET)
-    public String callback(@RequestParam String code, @RequestParam String state, HttpServletRequest request){
+    public String callback(@RequestParam String code, @RequestParam String state, HttpServletRequest request, HttpServletResponse response){
         System.out.println(code+" "+state);
         AccessToKenDto accessToKenDto=new AccessToKenDto();
         accessToKenDto.setCode(code);
@@ -52,13 +54,15 @@ public class GitHubController {
         System.out.println(gitHubUser.getName());
         if(gitHubUser!=null){
             YongHuXinXi yongHuXinXi=new YongHuXinXi();
-            yongHuXinXi.setToken(UUID.randomUUID().toString());
+            String token=UUID.randomUUID().toString();
+            yongHuXinXi.setToken(token);
             yongHuXinXi.setYongHuMing(gitHubUser.getName());
             yongHuXinXi.setDengLuMing(gitHubUser.getId().toString());
             yongHuXinXi.setChuangJianShiJian(new Date(System.currentTimeMillis()));
             yongHuXinXi.setXiuGaiShiJian(yongHuXinXi.getChuangJianShiJian());
             yongHuXinXiServiceImpl.xinZeng(yongHuXinXi);
             request.getSession().setAttribute("user",gitHubUser);
+            response.addCookie(new Cookie("token",token));
             return "redirect:/";
         }else{
             return "redirect:/";

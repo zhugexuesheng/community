@@ -1,25 +1,28 @@
 package com.gxa.springbootmain.service.impl;
 
-import com.gxa.springbootmain.mapper.YongHuXinXiMapper;
+import com.gxa.springbootmain.mapper.TieZhiMapper;
+import com.gxa.springbootmain.pojo.TieZhi;
 import com.gxa.springbootmain.pojo.YongHuXinXi;
-import com.gxa.springbootmain.service.YongHuXinXiService;
+import com.gxa.springbootmain.service.TieZhiService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * (YongHuXinXi)表服务实现类
+ * (TieZhi)表服务实现类
  *
  * @author zhangyujin
  * @version 1.0
- * @since 2021-02-14 18:04:02
+ * @since 2021-02-15 23:32:23
  */
-@Service("yongHuXinXiService")
-public class YongHuXinXiServiceImpl implements YongHuXinXiService {
+@Service("tieZhiService")
+public class TieZhiServiceImpl implements TieZhiService {
     @Resource
-    private YongHuXinXiMapper yongHuXinXiMapper;
+    private TieZhiMapper tieZhiMapper;
 
     /**
      * 根据模糊条件查询总个数
@@ -32,7 +35,7 @@ public class YongHuXinXiServiceImpl implements YongHuXinXiService {
         // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("code", 200);
         map.put("msg", "查询成功");
-        map.put("list", this.yongHuXinXiMapper.chaXunCount(mingCheng));
+        map.put("list", this.tieZhiMapper.chaXunCount(mingCheng));
         return map;
     }
 
@@ -47,7 +50,7 @@ public class YongHuXinXiServiceImpl implements YongHuXinXiService {
         // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("code", 200);
         map.put("msg", "查询成功");
-        map.put("list", this.yongHuXinXiMapper.chaXunAll());
+        map.put("list", this.tieZhiMapper.chaXunAll());
         return map;
     }
 
@@ -63,7 +66,7 @@ public class YongHuXinXiServiceImpl implements YongHuXinXiService {
         // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("code", 200);
         map.put("msg", "查询成功");
-        map.put("obj", this.yongHuXinXiMapper.chaXunById(id));
+        map.put("obj", this.tieZhiMapper.chaXunById(id));
         return map;
     }
 
@@ -77,7 +80,7 @@ public class YongHuXinXiServiceImpl implements YongHuXinXiService {
     @Override
     public Map<String, Object> chaXunFenYe(int page, String mingCheng) {
         // 获取当前表中的总记录
-        int tableCount = this.yongHuXinXiMapper.chaXunCount(mingCheng);
+        int tableCount = this.tieZhiMapper.chaXunCount(mingCheng);
         // 总页码计算   (总条数 - 1) / 每页显示条数  + 1
         // (100 - 1) / 10 + 1 = 10        (101 - 1) / 10 + 1 = 11      (99 - 1) / 10 + 1 = 10
         int pageCount = (tableCount - 1) / 10 + 1;
@@ -88,20 +91,23 @@ public class YongHuXinXiServiceImpl implements YongHuXinXiService {
         map.put("msg", "查询成功");
         map.put("pageCount", pageCount);  // 查询的记录总页码
         map.put("count", tableCount);     // 当前表中的总条数
-        map.put("data", this.yongHuXinXiMapper.chaXunFenYe(xiaBiao, mingCheng));
+        map.put("data", this.tieZhiMapper.chaXunFenYe(xiaBiao, mingCheng));
         return map;
     }
 
     /**
      * 新增数据
      *
-     * @param yongHuXinXi 实例对象
+     * @param tieZhi 实例对象
      * @return 实例对象
      */
     @Override
-    public Map<String, Object> xinZeng(YongHuXinXi yongHuXinXi) {
+    public Map<String, Object> xinZeng(TieZhi tieZhi, HttpServletRequest request) {
         // UUID.randomUUID()  返回内容：asd21321-ewrewrew213213-123213zsad-123asdasd这样的形态
-        this.yongHuXinXiMapper.xinZeng(yongHuXinXi);
+        String name= ((YongHuXinXi)request.getSession().getAttribute("user")).getYongHuMing();
+        tieZhi.setChuanJianRen(name);
+        tieZhi.setChuanJianShiJian(new Date(System.currentTimeMillis()));
+        this.tieZhiMapper.xinZeng(tieZhi);
         Map<String, Object> map = new HashMap<>();
         map.put("code", 200);   // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("msg", "新增成功");
@@ -111,12 +117,12 @@ public class YongHuXinXiServiceImpl implements YongHuXinXiService {
     /**
      * 通过ID查询单条数据
      *
-     * @param yongHuXinXi 实例对象
+     * @param tieZhi 实例对象
      * @return 实例对象
      */
     @Override
-    public Map<String, Object> gengXinById(YongHuXinXi yongHuXinXi) {
-        this.yongHuXinXiMapper.gengXinById(yongHuXinXi);
+    public Map<String, Object> gengXinById(TieZhi tieZhi) {
+        this.tieZhiMapper.gengXinById(tieZhi);
         Map<String, Object> map = new HashMap<>();
         map.put("code", 200);   // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("msg", "更新成功");
@@ -131,15 +137,10 @@ public class YongHuXinXiServiceImpl implements YongHuXinXiService {
      */
     @Override
     public Map<String, Object> shanChuById(String id) {
-        this.yongHuXinXiMapper.shanChuById(id);
+        this.tieZhiMapper.shanChuById(id);
         Map<String, Object> map = new HashMap<>();
         map.put("code", 200);   // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("msg", "删除成功");
         return map;
-    }
-
-    public YongHuXinXi chaXunByToken(String token) {
-        YongHuXinXi yongHuXinXi=yongHuXinXiMapper.chaXunBytoken(token);
-        return yongHuXinXi;
     }
 }
