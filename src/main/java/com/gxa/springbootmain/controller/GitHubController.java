@@ -2,6 +2,9 @@ package com.gxa.springbootmain.controller;
 
 import com.gxa.springbootmain.dto.AccessToKenDto;
 import com.gxa.springbootmain.dto.GitHubUser;
+import com.gxa.springbootmain.pojo.YongHuXinXi;
+import com.gxa.springbootmain.service.YongHuXinXiService;
+import com.gxa.springbootmain.service.impl.YongHuXinXiServiceImpl;
 import com.gxa.springbootmain.util.GitHubUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -10,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author zhangyujin
@@ -23,6 +29,8 @@ public class GitHubController {
     @Resource
     private GitHubUtil gitHubUtil;
 
+    @Resource
+    private YongHuXinXiServiceImpl yongHuXinXiServiceImpl;
     @Value("${github.client.id}")
     private String Client_id;
     @Value("${github.client.secret}")
@@ -31,7 +39,7 @@ public class GitHubController {
     private String Client_Uri;
 
     @RequestMapping(value = "/callback",method = RequestMethod.GET)
-    public String callback(@RequestParam String code,@RequestParam String state){
+    public String callback(@RequestParam String code, @RequestParam String state, HttpServletRequest request){
         System.out.println(code+" "+state);
         AccessToKenDto accessToKenDto=new AccessToKenDto();
         accessToKenDto.setCode(code);
@@ -42,6 +50,18 @@ public class GitHubController {
         String access=gitHubUtil.getAccessToken(accessToKenDto);
         GitHubUser gitHubUser=gitHubUtil.getUser(access);
         System.out.println(gitHubUser.getName());
-        return "luntanindex";
+        if(gitHubUser!=null){
+            YongHuXinXi yongHuXinXi=new YongHuXinXi();
+            yongHuXinXi.setToken(UUID.randomUUID().toString());
+            yongHuXinXi.setYongHuMing(gitHubUser.getName());
+            yongHuXinXi.setDengLuMing(gitHubUser.getId().toString());
+            yongHuXinXi.setChuangJianShiJian(new Date(System.currentTimeMillis()));
+            yongHuXinXi.setXiuGaiShiJian(yongHuXinXi.getChuangJianShiJian());
+            yongHuXinXiServiceImpl.xinZeng(yongHuXinXi);
+            request.getSession().setAttribute("user",gitHubUser);
+            return "redirect:/";
+        }else{
+            return "redirect:/";
+        }
     }
 }

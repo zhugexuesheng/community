@@ -4,17 +4,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * (YongHuXinXi)实体类
  *
  * @author zhangyujin
  * @version 1.0
- * @since 2021-02-14 18:04:03
+ * @since 2021-02-15 19:21:37
  */
 @ApiModel(value = "YongHuXinXi", description = "$tableInfo.comment")
 public class YongHuXinXi implements Serializable {
-    private static final long serialVersionUID = 127405187241375925L;
+    private static final long serialVersionUID = 251643438985476456L;
 
     @ApiModelProperty(name = "id", notes = "${column.comment}", dataType = "Integer", required = true)
     private Integer id;
@@ -42,6 +43,15 @@ public class YongHuXinXi implements Serializable {
 
     @ApiModelProperty(name = "youXiang", notes = "${column.comment}", dataType = "String", required = true)
     private String youXiang;
+
+    @ApiModelProperty(name = "token", notes = "${column.comment}", dataType = "String", required = true)
+    private String token;
+
+    @ApiModelProperty(name = "chuangJianShiJian", notes = "${column.comment}", dataType = "Date", required = true)
+    private Date chuangJianShiJian;
+
+    @ApiModelProperty(name = "xiuGaiShiJian", notes = "${column.comment}", dataType = "Date", required = true)
+    private Date xiuGaiShiJian;
 
 
     public Integer getId() {
@@ -116,18 +126,28 @@ public class YongHuXinXi implements Serializable {
         this.youXiang = youXiang;
     }
 
-    @Override
-    public String toString() {
-        return "YongHuXinXi{" +
-                "id=" + id +
-                ", yongHuMing='" + yongHuMing + '\'' +
-                ", yongHuTouXiang='" + yongHuTouXiang + '\'' +
-                ", dengLuMing='" + dengLuMing + '\'' +
-                ", dengLuMiMa='" + dengLuMiMa + '\'' +
-                ", jiFen=" + jiFen +
-                ", shouJi='" + shouJi + '\'' +
-                ", shengFenZhengHao='" + shengFenZhengHao + '\'' +
-                ", youXiang='" + youXiang + '\'' +
-                '}';
+    public String getToken() {
+        return token;
     }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getChuangJianShiJian() {
+        return chuangJianShiJian;
+    }
+
+    public void setChuangJianShiJian(Date chuangJianShiJian) {
+        this.chuangJianShiJian = chuangJianShiJian;
+    }
+
+    public Date getXiuGaiShiJian() {
+        return xiuGaiShiJian;
+    }
+
+    public void setXiuGaiShiJian(Date xiuGaiShiJian) {
+        this.xiuGaiShiJian = xiuGaiShiJian;
+    }
+
 }

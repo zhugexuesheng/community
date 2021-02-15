@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author zhangyujin
  * @version 1.0
- * @since 2021-02-14 18:04:03
+ * @since 2021-02-15 19:21:35
  */
 public interface YongHuXinXiMapper {
 

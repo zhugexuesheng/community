@@ -12,10 +12,13 @@
         <result property="shouJi" column="shou_ji" jdbcType="VARCHAR"/>
         <result property="shengFenZhengHao" column="sheng_fen_zheng_hao" jdbcType="VARCHAR"/>
         <result property="youXiang" column="you_xiang" jdbcType="VARCHAR"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="chuangJianShiJian" column="chuang_jian_shi_jian" jdbcType="TIMESTAMP"/>
+        <result property="xiuGaiShiJian" column="xiu_gai_shi_jian" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Beas_Column_List">
-        id, yong_hu_ming, yong_hu_tou_xiang, deng_lu_ming, deng_lu_mi_ma, ji_fen, shou_ji, sheng_fen_zheng_hao, you_xiang
+        id, yong_hu_ming, yong_hu_tou_xiang, deng_lu_ming, deng_lu_mi_ma, ji_fen, shou_ji, sheng_fen_zheng_hao, you_xiang, token, chuang_jian_shi_jian, xiu_gai_shi_jian
     </sql>
 
     <!--查询所有主键和名称-->
@@ -57,18 +60,15 @@
         </where>
         limit #{xiaBiao},10;
     </select>
-    <select id="chaXunByYongHuMingAndMima" resultMap="YongHuXinXiMap">
-        select id, yong_hu_ming, yong_hu_tou_xiang, deng_lu_ming, deng_lu_mi_ma, ji_fen, shou_ji, sheng_fen_zheng_hao, you_xiang from yong_hu_xin_xi where deng_lu_ming=#{yongHuMing} and deng_lu_mi_ma=#{mima}
-    </select>
 
     <!--新增所有列-->
     <insert id="xinZeng" parameterType="com.gxa.springbootmain.pojo.YongHuXinXi">
-        <selectKey keyProperty="id" resultType="String" order="BEFORE">
-            select replace(uuid(),'-','')
-        </selectKey>
+<!--        <selectKey keyProperty="id" resultType="String" order="BEFORE">-->
+<!--            select replace(uuid(),'-','')-->
+<!--        </selectKey>-->
         insert into jiudianguanli.yong_hu_xin_xi(<include refid="Beas_Column_List"/>)
         values (#{id}, #{yongHuMing}, #{yongHuTouXiang}, #{dengLuMing}, #{dengLuMiMa}, #{jiFen}, #{shouJi},
-        #{shengFenZhengHao}, #{youXiang})
+        #{shengFenZhengHao}, #{youXiang}, #{token}, #{chuangJianShiJian}, #{xiuGaiShiJian})
     </insert>
 
     <!--通过主键修改数据-->
@@ -99,6 +99,15 @@
             <if test="youXiang != null and youXiang != ''">
                 you_xiang = #{youXiang},
             </if>
+            <if test="token != null and token != ''">
+                token = #{token},
+            </if>
+            <if test="chuangJianShiJian != null">
+                chuang_jian_shi_jian = #{chuangJianShiJian},
+            </if>
+            <if test="xiuGaiShiJian != null">
+                xiu_gai_shi_jian = #{xiuGaiShiJian},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -109,5 +118,9 @@
         from jiudianguanli.yong_hu_xin_xi
         where id = #{id}
     </delete>
+
+    <select id="chaXunByYongHuMingAndMima" resultMap="YongHuXinXiMap">
+        select id, yong_hu_ming, yong_hu_tou_xiang, deng_lu_ming, deng_lu_mi_ma, ji_fen, shou_ji, sheng_fen_zheng_hao, you_xiang from yong_hu_xin_xi where deng_lu_ming=#{yongHuMing} and deng_lu_mi_ma=#{mima}
+    </select>
 
 </mapper>
