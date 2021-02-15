@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class GreetingController {
 
-    @GetMapping("/greeting")
+    @GetMapping("/")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="Worlds") String name, Model model) {
         model.addAttribute("name", name);
-        return "greeting";
+        return "luntanindex";
     }
 
 }
