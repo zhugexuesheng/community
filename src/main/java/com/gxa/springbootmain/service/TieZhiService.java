@@ -67,4 +67,6 @@ public interface TieZhiService {
      * @return 是否成功
      */
     Map<String, Object> shanChuById(String id);
+
+    Map<String, Object> chaXunCount();
 }

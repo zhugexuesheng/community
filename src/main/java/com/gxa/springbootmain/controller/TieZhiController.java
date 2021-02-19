@@ -51,6 +51,10 @@ public class TieZhiController {
         return this.tieZhiServiceImpl.chaXunFenYe(page, mingCheng);
     }
 
+    @RequestMapping(value = "chaXunCount", method = RequestMethod.GET)
+    public Map<String, Object> chaXunCount() {
+        return this.tieZhiServiceImpl.chaXunCount();
+    }
     /**
      * 查询所有数据
      *
@@ -68,15 +72,23 @@ public class TieZhiController {
      * @param id 主键
      * @return 单条数据
      */
-//    @RequestMapping(value = "shanChuById", method = RequestMethod.POST)
-//    @ApiOperation(value = "根据一个主键删除一条**记录的接口",notes = "根据一个主键删除一条**记录的接口",httpMethod = "POST")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id",value = "主键",paramType = "query",dataType = "String",required = true),
-//    })
+    @RequestMapping(value = "shanChuById", method = RequestMethod.POST)
+    @ApiOperation(value = "根据一个主键删除一条**记录的接口",notes = "根据一个主键删除一条**记录的接口",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id",value = "主键",paramType = "query",dataType = "String",required = true),
+    })
     public Map<String, Object> shanChuById(@RequestParam("id") String id) {
         return this.tieZhiServiceImpl.shanChuById(id);
     }
 
+    @RequestMapping(value = "ChaXunById", method = RequestMethod.POST)
+    @ApiOperation(value = "根据一个主键删除一条**记录的接口",notes = "根据一个主键删除一条**记录的接口",httpMethod = "POST")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id",value = "主键",paramType = "query",dataType = "String",required = true),
+    })
+    public Map<String, Object> ChaXunById(@RequestParam("id") String id) {
+        return this.tieZhiServiceImpl.chaXunById(Integer.parseInt(id));
+    }
     /**
      * 通过主键更新单条数据
      *

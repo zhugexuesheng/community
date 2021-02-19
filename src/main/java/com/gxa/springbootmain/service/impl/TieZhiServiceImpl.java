@@ -50,7 +50,7 @@ public class TieZhiServiceImpl implements TieZhiService {
         // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("code", 200);
         map.put("msg", "查询成功");
-        map.put("list", this.tieZhiMapper.chaXunAll());
+        map.put("data", this.tieZhiMapper.chaXunAll());
         return map;
     }
 
@@ -66,7 +66,7 @@ public class TieZhiServiceImpl implements TieZhiService {
         // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("code", 200);
         map.put("msg", "查询成功");
-        map.put("obj", this.tieZhiMapper.chaXunById(id));
+        map.put("data", this.tieZhiMapper.chaXunById(id));
         return map;
     }
 
@@ -141,6 +141,15 @@ public class TieZhiServiceImpl implements TieZhiService {
         Map<String, Object> map = new HashMap<>();
         map.put("code", 200);   // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
         map.put("msg", "删除成功");
+        return map;
+    }
+
+    public Map<String, Object> chaXunCount() {
+       int count=tieZhiMapper.chaXunCount();
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", 200);   // 前端端分离时，前端人员会首先判断code值是否满足200，如果不是200，则提醒用户失败
+        map.put("msg", "删除成功");
+        map.put("count",count);
         return map;
     }
 }

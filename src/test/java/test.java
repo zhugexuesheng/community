@@ -1,5 +1,7 @@
 import com.gxa.springbootmain.Springbootmain;
+import com.gxa.springbootmain.mapper.TieZhiMapper;
 import com.gxa.springbootmain.mapper.YongHuXinXiMapper;
+import com.gxa.springbootmain.service.TieZhiService;
 import com.gxa.springbootmain.service.impl.DengluServiceImpl;
 import com.gxa.springbootmain.service.impl.YongHuXinXiServiceImpl;
 import org.junit.Test;
@@ -22,8 +24,14 @@ import javax.annotation.Resource;
 public class test {
     @Resource
     private YongHuXinXiMapper yongHuXinXiMapper;
+
+    @Resource
+    private TieZhiService tieZhiService;
+
+    @Resource
+    private TieZhiMapper tieZhiMapper;
     @Test
     public void test01(){
-        System.out.println(yongHuXinXiMapper.chaXunByYongHuMingAndMima("zyj","123456"));
+        System.out.println(tieZhiMapper.chaXunFenYe(1,null).get(0).getPingLunShu());
     }
 }

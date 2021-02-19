@@ -16,7 +16,7 @@ import java.util.Map;
 @ControllerAdvice
 public class MyException {
 
-    @ExceptionHandler
+    @ExceptionHandler(Exception.class)
     @ResponseBody
     public Map<String,Object> getException(Throwable e){
         Map<String,Object> map=new HashMap<>();

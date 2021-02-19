@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxa.springbootmain.mapper.ErJiPingLunMapper">
+
+    <resultMap type="com.gxa.springbootmain.pojo.ErJiPingLun" id="ErJiPingLunMap">
+        <result property="id" column="eid" jdbcType="INTEGER"/>
+        <result property="pingLunId" column="ping_lun_id" jdbcType="INTEGER"/>
+        <result property="pingLunShiJian" column="ping_lun_shi_jian" jdbcType="TIMESTAMP"/>
+        <result property="pingLunNeiRong" column="ping_lun_nei_rong" jdbcType="VARCHAR"/>
+        <result property="yongHuXinXiId" column="yong_hu_xin_xi_id" jdbcType="INTEGER"/>
+        <result property="dianZanShu" column="dian_zan_shu" jdbcType="INTEGER"/>
+        <association property="yongHuXinXi" javaType="com.gxa.springbootmain.pojo.YongHuXinXi">
+            <id property="id" column="yid"/>
+            <result property="yongHuMing" column="yong_hu_ming"/>
+            <result property="yongHuTouXiang" column="yong_hu_tou_xiang"/>
+        </association>
+
+    </resultMap>
+
+    <sql id="Beas_Column_List">
+        id, ping_lun_id, ping_lun_shi_jian, ping_lun_nei_rong, yong_hu_xin_xi_id, dian_zan_shu
+    </sql>
+
+    <!--查询所有主键和名称-->
+    <select id="chaXunAll" resultMap="ErJiPingLunMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.er_ji_ping_lun
+    </select>
+
+    <!--查询单个-->
+    <select id="chaXunById" resultMap="ErJiPingLunMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.er_ji_ping_lun
+        where id = #{id}
+    </select>
+
+    <!--根据条件查询当前表的满足条件的个数-->
+    <select id="chaXunCount" resultType="int">
+        select
+        count(id)
+        from jiudianguanli.er_ji_ping_lun
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="chaXunFenYe" resultMap="ErJiPingLunMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.er_ji_ping_lun
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+        limit #{xiaBiao},10;
+    </select>
+
+    <select id="chaXunByPunLunId" resultMap="ErJiPingLunMap">
+       select
+              ep.id eid, ping_lun_id, ping_lun_shi_jian, ping_lun_nei_rong,
+              yong_hu_xin_xi_id, dian_zan_shu,yhxx.id yid,yhxx.yong_hu_ming,
+              yhxx.yong_hu_tou_xiang
+       from er_ji_ping_lun ep left join yong_hu_xin_xi yhxx on ep.yong_hu_xin_xi_id = yhxx.id
+       where ping_lun_id=#{id}
+    </select>
+    <select id="chaXunCountById" resultType="java.lang.Integer">
+        select count(*) from er_ji_ping_lun
+         where ping_lun_id=#{id}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="xinZeng" parameterType="com.gxa.springbootmain.pojo.ErJiPingLun">
+        insert into jiudianguanli.er_ji_ping_lun( ping_lun_id, ping_lun_shi_jian, ping_lun_nei_rong, yong_hu_xin_xi_id, dian_zan_shu)
+        values ( #{pingLunId}, #{pingLunShiJian}, #{pingLunNeiRong}, #{yongHuXinXiId}, #{dianZanShu})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="gengXinById" parameterType="com.gxa.springbootmain.pojo.ErJiPingLun">
+        update jiudianguanli.er_ji_ping_lun
+        <set>
+            <if test="pingLunId != null">
+                ping_lun_id = #{pingLunId},
+            </if>
+            <if test="pingLunShiJian != null">
+                ping_lun_shi_jian = #{pingLunShiJian},
+            </if>
+            <if test="pingLunNeiRong != null and pingLunNeiRong != ''">
+                ping_lun_nei_rong = #{pingLunNeiRong},
+            </if>
+            <if test="yongHuXinXiId != null">
+                yong_hu_xin_xi_id = #{yongHuXinXiId},
+            </if>
+            <if test="dianZanShu != null">
+                dian_zan_shu = #{dianZanShu},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="shanChuById">
+        delete
+        from jiudianguanli.er_ji_ping_lun
+        where id = #{id}
+    </delete>
+
+</mapper>

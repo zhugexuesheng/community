@@ -1,10 +1,13 @@
 package com.gxa.springbootmain.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * (TieZhi)实体类
@@ -39,6 +42,9 @@ public class TieZhi implements Serializable {
     /**
      * 创建时间
      */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    // 下面是服务器响应返回的内容，如果没有格式化转换，那么返回的内容是长毫秒数，接收mysql数据库中的数据也需要设置东八区+8时
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty(name = "chuanJianShiJian", notes = "创建时间", dataType = "Date", required = true)
     private Date chuanJianShiJian;
     /**
@@ -67,6 +73,21 @@ public class TieZhi implements Serializable {
     @ApiModelProperty(name = "leiXing", notes = "类型", dataType = "String", required = true)
     private String leiXing;
 
+    private YongHuXinXi yongHuXinXi;
+
+    private List<PingLun> pingLun;
+
+    public List<PingLun> getPingLun() {
+        return pingLun;
+    }
+
+    public void setPingLun(List<PingLun> pingLun) {
+        this.pingLun = pingLun;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Integer getId() {
         return id;
@@ -138,6 +159,14 @@ public class TieZhi implements Serializable {
 
     public void setDianZhanShu(String dianZhanShu) {
         this.dianZhanShu = dianZhanShu;
+    }
+
+    public YongHuXinXi getYongHuXinXi() {
+        return yongHuXinXi;
+    }
+
+    public void setYongHuXinXi(YongHuXinXi yongHuXinXi) {
+        this.yongHuXinXi = yongHuXinXi;
     }
 
     public String getLeiXing() {

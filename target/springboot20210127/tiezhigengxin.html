@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script src="jquery/jquery-3.5.1.js" type="application/javascript"></script>
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">酒店社区</span>
+            </button>
+            <a class="navbar-brand" href="luntanindex.html">酒店社区</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索问题">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" th:if="${session.user!=null}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <div class="layui-inline">
+                            <img src="https://avatars.githubusercontent.com/u/79013937?v=4" style="width: 38px;height: 38px" class="layui-circle">
+                        </div>
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">信息中心</a></li>
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="#">退出登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid" style="background-color: #00F7DE">
+        <div class="row" style="margin: 15px;background-color: white;height: 640px;">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" style="margin-left: 50px;margin-top:15px;font-size: large">
+                    <span>看帖</span></span>
+                <hr>
+                <form class="layui-form" action="">
+                    <input id="ids" hidden>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="margin-left: 50px;font-size:large">
+                            问题标题（简明扼要）：
+                        </div>
+                        <div class="layui-input-block" style="margin-left: 50px">
+                            <input id="biaoTi" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <div class="layui-input-block" style="margin-left: 50px;font-size:large">
+                            问题补充（必填，参照右侧提示）：
+                        </div>
+                        <div class="layui-input-block" style="margin-left: 50px">
+                            <textarea id="miaoShu" placeholder="请输入内容" class="layui-textarea" style="height: 300px"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="margin-left: 50px;font-size:large">
+                            添加标签：
+                        </div>
+                        <div class="layui-input-block" style="margin-left: 50px">
+                            <input id="biaoQian" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                        </div>
+                    </div>
+                </form>
+                <button id="fabu" type="button" class="layui-btn"style="margin-left: 50px;margin-bottom: 20px">保存</button>
+                <div id="anniu"></div>
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+                <div class="layui-input-block" style="margin-left: 50px;margin-top:25px;">
+                    <h3 style="font-weight: bold">问题发起指南</h3>
+                    <h3 style="font-size: large">Spring Boot是由Pivotal团队提供的全新框架，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。通过这种方式，Spring Boot致力于在蓬勃发展的快速应用开发领域(rapid application development)成为领导者。</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<script src="layui/layui.js"></script>
+<script src="jquery/jquery-3.5.1.js"></script>
+<script>
+    $(function () {
+        var user;
+        $.ajax({
+            url:"/yongHuXinXi/chaXun",   // 请求路径
+            type:"Get",            // 请求的方式，不区分大小写
+            async:false,             // 是否异步，true是默认值，false为同步请求
+            cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype:"text",        // 返回类型，text文本、html页面、json数据
+            data:{
+            },
+            success:function(response){
+                if(response.code===200){
+                    user=response.data;
+                    console.log(user);
+                }else{
+                    alert(response.msg);
+                }
+            },
+            error:function(response){
+                alert("出错" + response);
+            }
+        });
+
+        var url=window.location.href;
+        var urls = url.split("=");
+        console.log(urls[1])
+        $.ajax({
+            url:"/tieZhi/ChaXunById",   // 请求路径
+            type:"Post",            // 请求的方式，不区分大小写
+            async:true,             // 是否异步，true是默认值，false为同步请求
+            cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype:"text",        // 返回类型，text文本、html页面、json数据
+
+            data:{
+                id:urls[1]
+            },
+            success:function(response){
+                if(response.code===200){
+                    console.log(response.data)
+                    $("#biaoTi").val(response.data.biaoTi);
+                    $("#miaoShu").val(response.data.miaoShu);
+                    $("#biaoQian").val(response.data.biaoQian);
+                    $("#ids").val(response.data.id);
+                    if(user.yongHuMing==response.data.chuanJianRen){
+                        $("#anniu").append(" <button id='fabu' type='button' class='layui-btn'style='margin-left: 50px;'><a class='glyphicon glyphicon-pencil' href='tiezhigengxin.html?id="+response.data.id+"'></a></button>")
+                        $("#name").val(user.yongHuMing)
+                    }
+                }else{
+                    alert(response.msg);
+                }
+            },
+            error:function(response){
+                alert("出错" + response);
+            }
+        });
+
+        $("#fabu").click(function () {
+            $.ajax({
+                url:"/tieZhi/gengXinById",   // 请求路径
+                type:"Post",            // 请求的方式，不区分大小写
+                async:true,             // 是否异步，true是默认值，false为同步请求
+                cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                datatype:"text",        // 返回类型，text文本、html页面、json数据
+                contentType:"application/json;charset=utf-8",
+                data:JSON.stringify({
+                    biaoTi: $("#biaoTi").val(),
+                    miaoShu:$("#miaoShu").val(),
+                    biaoQian:$("#biaoQian").val(),
+                    id:$("#ids").val()
+                }),
+                success:function(response){
+                    if(response.code===200){
+                        alert(response.msg);
+                    }else{
+                        alert(response.msg);
+                    }
+                },
+                error:function(response){
+                    alert("出错" + response);
+                }
+            });
+        })
+    })
+</script>
+</body>
+</html>

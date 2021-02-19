@@ -60,6 +60,7 @@ public class GitHubController {
             yongHuXinXi.setDengLuMing(gitHubUser.getId().toString());
             yongHuXinXi.setChuangJianShiJian(new Date(System.currentTimeMillis()));
             yongHuXinXi.setXiuGaiShiJian(yongHuXinXi.getChuangJianShiJian());
+            yongHuXinXi.setYongHuTouXiang(gitHubUser.getAvatar_url());
             yongHuXinXiServiceImpl.xinZeng(yongHuXinXi);
             request.getSession().setAttribute("user",gitHubUser);
             response.addCookie(new Cookie("token",token));

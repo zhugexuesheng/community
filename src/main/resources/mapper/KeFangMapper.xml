@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxa.springbootmain.mapper.KeFangMapper">
+
+    <resultMap type="com.gxa.springbootmain.pojo.KeFang" id="KeFangMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="jiuDianId" column="jiu_dian_id" jdbcType="INTEGER"/>
+        <result property="keFangHao" column="ke_fang_hao" jdbcType="INTEGER"/>
+        <result property="keFangLeiXing" column="ke_fang_lei_xing" jdbcType="VARCHAR"/>
+        <result property="quanRiFangJia" column="quan_ri_fang_jia" jdbcType="VARCHAR"/>
+        <result property="keFangXinXi" column="ke_fang_xin_xi" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Beas_Column_List">
+        id, jiu_dian_id, ke_fang_hao, ke_fang_lei_xing, quan_ri_fang_jia, ke_fang_xin_xi
+    </sql>
+
+    <!--查询所有主键和名称-->
+    <select id="chaXunAll" resultMap="KeFangMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.ke_fang
+    </select>
+
+    <!--查询单个-->
+    <select id="chaXunById" resultMap="KeFangMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.ke_fang
+        where id = #{id}
+    </select>
+
+    <!--根据条件查询当前表的满足条件的个数-->
+    <select id="chaXunCount" resultType="int">
+        select
+        count(id)
+        from jiudianguanli.ke_fang
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="chaXunFenYe" resultMap="KeFangMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.ke_fang
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+        limit #{xiaBiao},10;
+    </select>
+
+    <!--新增所有列-->
+    <insert id="xinZeng" parameterType="com.gxa.springbootmain.pojo.KeFang">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','')
+        </selectKey>
+        insert into jiudianguanli.ke_fang(<include refid="Beas_Column_List"/>)
+        values (#{id}, #{jiuDianId}, #{keFangHao}, #{keFangLeiXing}, #{quanRiFangJia}, #{keFangXinXi})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="gengXinById" parameterType="com.gxa.springbootmain.pojo.KeFang">
+        update jiudianguanli.ke_fang
+        <set>
+            <if test="jiuDianId != null">
+                jiu_dian_id = #{jiuDianId},
+            </if>
+            <if test="keFangHao != null">
+                ke_fang_hao = #{keFangHao},
+            </if>
+            <if test="keFangLeiXing != null and keFangLeiXing != ''">
+                ke_fang_lei_xing = #{keFangLeiXing},
+            </if>
+            <if test="quanRiFangJia != null and quanRiFangJia != ''">
+                quan_ri_fang_jia = #{quanRiFangJia},
+            </if>
+            <if test="keFangXinXi != null and keFangXinXi != ''">
+                ke_fang_xin_xi = #{keFangXinXi},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="shanChuById">
+        delete
+        from jiudianguanli.ke_fang
+        where id = #{id}
+    </delete>
+
+</mapper>

@@ -31,7 +31,8 @@ public class DengluServiceImpl implements DengluService {
             return map;
         }
         if(yongHuXinXi.getYongHuMing()!=null){
-            request.getSession().setAttribute("yongHu",yongHuXinXi.getYongHuMing());
+
+            request.getSession().setAttribute("user",yongHuXinXi);
             map.put("code",200);
             map.put("msg","登录成功");
             map.put("data",yongHuXinXi);

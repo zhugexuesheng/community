@@ -68,4 +68,7 @@ public interface TieZhiMapper {
      */
     int shanChuById(@Param("id") String id);
 
+    int chaXunCount();
+
+    void gengXinplsById(@Param("count") int count, @Param("tieZhiId") int tieZhiId);
 }

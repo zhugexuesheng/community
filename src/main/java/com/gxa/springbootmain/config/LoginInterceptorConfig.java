@@ -39,6 +39,7 @@ public class LoginInterceptorConfig implements WebMvcConfigurer {
                         "/css/**",
                         "/denglushucai/**",
                         "/images/**",
+                        "/img/**",
                         "/jquery/**",
                         "/js/**",
                         "/layui/**",

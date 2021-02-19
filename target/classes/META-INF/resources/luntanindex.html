@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
     <script src="jquery/jquery-3.5.1.js" type="application/javascript"></script>
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="layui/layui.js"></script>
+    <script src="jquery/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -27,22 +30,156 @@
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" id="denglu">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >登录<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">账号密码登录</a>
                 <li th:if="${session.user==null}">
                     <a href="https://github.com/login/oauth/authorize?client_id=Iv1.028232b02bd362e6&redirect_uri=http://localhost:8080/callback&scope=user&state=1">
-                    登录</a>
+                    github登录</a>
                 </li>
-                <li class="dropdown" th:if="${session.user!=null}">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getYongHuMing()}"> <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">信息中心</a></li>
-                        <li><a href="#">个人资料</a></li>
-                        <li><a href="#">退出登录</a></li>
-                    </ul>
+                </ul>
                 </li>
+
+<!--                <li class="dropdown" th:if="${session.user!=null}">-->
+<!--                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getYongHuMing()}"> <span class="caret"></span></a>-->
+<!--                    <ul class="dropdown-menu">-->
+<!--                        <li><a href="#">信息中心</a></li>-->
+<!--                        <li><a href="#">个人资料</a></li>-->
+<!--                        <li><a href="#">退出登录</a></li>-->
+<!--                    </ul>-->
+<!--                </li>-->
             </ul>
         </div>
     </div>
+    <div class="container-fluid" style="background-color: #00F7DE">
+        <div class="row" style="margin: 15px;background-color: white">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+                 <span class="glyphicon glyphicon-list" aria-hidden="true" style="margin-left: 5px;margin-top:15px;font-size: x-large">
+                    <span style="margin-left: -15px">发现</span></span>
+                <hr>
+                <div id="nav">
+
+                </div>
+                <div id="demo2"></div>
+
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+                <div class="layui-input-block" style="margin-left: 50px;margin-top:25px;">
+                    <h3 style="font-weight: bold">问题发起指南</h3>
+                </div>
+            </div>
+        </div>
+    </div>
 </nav>
+<script>
+    var count;
+    $(function () {
+            var user;
+            var yongHuXinXiId;
+            $.ajax({
+                url:"/yongHuXinXi/chaXun",   // 请求路径
+                type:"Get",            // 请求的方式，不区分大小写
+                async:true,             // 是否异步，true是默认值，false为同步请求
+                cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                datatype:"text",        // 返回类型，text文本、html页面、json数据
+                data:{
+                },
+                success:function(response){
+                    if(response.code===200){
+                        $("#denglu").empty();
+                        $("#denglu").append("<li class='dropdown'>\n" +
+                            "                        <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>\n" +
+                            "                        <div class='layui-inline'>\n" +
+                            "                        <img id='myimg' src='"+response.data.yongHuTouXiang+"' style='width: 38px;height: 38px' class='layui-circle'>\n" +
+                            "                        </div>\n" +
+                            "                        <span class='caret'></span></a>\n" +
+                            "                    <ul class='dropdown-menu'>\n" +
+                            "                        <li><a href='#'>信息中心</a></li>\n" +
+                            "                    <li><a href='#'>个人资料</a></li>\n" +
+                            "                    <li><a href='#'>退出登录</a></li>\n" +
+                            "                    </ul>\n" +
+                            "                    </li>")
+                        user=response.data;
+                        yongHuXinXiId=response.data.id;
+                    }else{
+                    }
+                },
+                error:function(response){
+                    alert("出错" + response);
+                }
+            });
+        
+        $.ajax({
+            url:"/tieZhi/chaXunCount",   // 请求路径
+            type:"Get",            // 请求的方式，不区分大小写
+            async:false,             // 是否异步，true是默认值，false为同步请求
+            cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype:"text",        // 返回类型，text文本、html页面、json数据
+            data:{},
+            success:function(response){
+                if(response.code===200){
+                    console.log(response.count)
+                    count=response.count;
+                }else{
+                    alert(response.msg);
+                }
+            },
+            error:function(response){
+                alert("出错" + response);
+            }
+        });
+    })
+    layui.use(['laypage', 'layer'], function() {
+        var laypage = layui.laypage
+            , layer = layui.layer;
+        laypage.render({
+            elem: 'demo2'
+            ,count: count
+            ,theme: '#1E9FFF'
+            ,jump:function (obj,first) {
+                $.ajax({
+                    url:"/tieZhi/chaXunFenYe",   // 请求路径
+                    type:"Get",            // 请求的方式，不区分大小写
+                    async:true,             // 是否异步，true是默认值，false为同步请求
+                    cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                    datatype:"text",        // 返回类型，text文本、html页面、json数据
+                    data:{
+                        page:obj.curr
+                    },
+                    success:function(response){
+                        if(response.code===0){
+                            var tiezhis=response.data;
+                            $("#nav").empty();
+                            for (var i=0;i<tiezhis.length;i++){
+                                $("#nav").append(" <ul  class='media-list'>\n" +
+                                    "                        <li class='media'>\n" +
+                                    "                            <div class='media-left'>\n" +
+                                    "                                <a href='#'>\n" +
+                                    "                                    <img class='media-object img-circle' src='"+tiezhis[i].yongHuXinXi.yongHuTouXiang+"' style='width: 48px;height: 48px'>\n" +
+                                    "                                </a>\n" +
+                                    "                            </div>\n" +
+                                    "                            <div class='media-body' >\n" +
+                                    "                                <h4 class='media-heading'><a href='xiangqing.html?id="+tiezhis[i].id+"' style='font-weight:bold'>"+tiezhis[i].biaoTi+"</a></h4>\n" +
+                                    "                                "+tiezhis[i].biaoQian+"\n" +
+                                    "                                <div style='color: #9acfea'>"+tiezhis[i].yueDuShu+"浏览，"+tiezhis[i].dianZhanShu+"点赞，"+tiezhis[i].pingLunShu+"评论</div>\n" +
+                                    "                            </div>\n" +
+                                    "                        </li>\n" +
+                                    "                    </ul>")
+                            }
+                        }else{
+                            alert(response.msg);
+                        }
+                    },
+                    error:function(response){
+                        alert("出错" + response);
+                    }
+                });
+            }
+        });
+    })
+
+</script>
 </body>
 </html>

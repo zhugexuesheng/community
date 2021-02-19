@@ -3,16 +3,32 @@
 <mapper namespace="com.gxa.springbootmain.mapper.TieZhiMapper">
 
     <resultMap type="com.gxa.springbootmain.pojo.TieZhi" id="TieZhiMap">
-        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="id" column="tid" jdbcType="INTEGER"/>
         <result property="biaoTi" column="biao_ti" jdbcType="VARCHAR"/>
         <result property="miaoShu" column="miao_shu" jdbcType="VARCHAR"/>
         <result property="biaoQian" column="biao_qian" jdbcType="VARCHAR"/>
-        <result property="chuanJianShiJian" column="chuan_jian_shi_jian" jdbcType="TIMESTAMP"/>
+        <result property="chuanJianShiJian" column="tie_zhi_chuan_jian_shi_jian" jdbcType="TIMESTAMP"/>
         <result property="chuanJianRen" column="chuan_jian_ren" jdbcType="VARCHAR"/>
         <result property="yueDuShu" column="yue_du_shu" jdbcType="VARCHAR"/>
-        <result property="pingLunShu" column="ping_lun_shu" jdbcType="VARCHAR"/>
+        <result property="pingLunShu" column="pls" jdbcType="VARCHAR"/>
         <result property="dianZhanShu" column="dian_zhan_shu" jdbcType="VARCHAR"/>
-        <result property="leiXing" column="lei_xing" jdbcType="VARCHAR"/>
+        <result property="leiXing" column="tie_zhi_lei_xing" jdbcType="VARCHAR"/>
+        <association property="yongHuXinXi" javaType="com.gxa.springbootmain.pojo.YongHuXinXi">
+            <id property="id" column="yid"/>
+            <result property="yongHuTouXiang" column="yong_hu_tou_xiang"/>
+        </association>
+        <collection property="pingLun" ofType="com.gxa.springbootmain.pojo.PingLun">
+            <id property="id" column="pid"/>
+            <result property="huiFu" column="hui_fu"/>
+            <result property="chuangJianShiJian" column="ping_lun_chuang_jian_shi_jian"/>
+            <result property="pingLunShu" column="erpls"/>
+            <association property="yongHuXinXi" javaType="com.gxa.springbootmain.pojo.YongHuXinXi">
+                <id property="id" column="yid2"/>
+                <result property="yongHuTouXiang" column="ping_lun_yong_hu_tou_xiang"/>
+                <result property="yongHuMing" column="ping_lun_yong_hu_ming"/>
+            </association>
+        </collection>
+
     </resultMap>
 
     <sql id="Beas_Column_List">
@@ -22,16 +38,24 @@
     <!--查询所有主键和名称-->
     <select id="chaXunAll" resultMap="TieZhiMap">
         select
-        <include refid="Beas_Column_List"/>
-        from jiudianguanli.tie_zhi
+              tz.id tid, biao_ti, miao_shu, biao_qian, chuan_jian_shi_jian tie_zhi_chuan_jian_shi_jian, chuan_jian_ren,
+               yue_du_shu, ping_lun_shu, dian_zhan_shu, lei_xing,yhxx.id yid,yhxx.yong_hu_tou_xiang
+        from jiudianguanli.tie_zhi tz left join yong_hu_xin_xi yhxx
+        on tz.chuan_jian_ren=yhxx.yong_hu_ming
     </select>
 
     <!--查询单个-->
     <select id="chaXunById" resultMap="TieZhiMap">
         select
-        <include refid="Beas_Column_List"/>
-        from jiudianguanli.tie_zhi
-        where id = #{id}
+            tz.id tid, biao_ti, miao_shu, biao_qian, chuan_jian_shi_jian tie_zhi_chuan_jian_shi_jian, chuan_jian_ren,
+            yue_du_shu, tz.ping_lun_shu pls, dian_zhan_shu, tz.lei_xing tie_zhi_lei_xing,yhxx.id yid,yhxx.yong_hu_tou_xiang,
+            pl.chuang_jian_shi_jian ping_lun_chuang_jian_shi_jian,pl.hui_fu,pl.id pid,yhxx2.id yid2,yhxx.yong_hu_tou_xiang,
+               yhxx2.yong_hu_tou_xiang ping_lun_yong_hu_tou_xiang,yhxx2.yong_hu_ming ping_lun_yong_hu_ming,pl.ping_lun_shu erpls
+        from tie_zhi tz
+                 left join yong_hu_xin_xi yhxx on tz.chuan_jian_ren = yhxx.yong_hu_ming
+                 left join ping_lun pl on tz.id = pl.tie_zhi_id
+                 left join yong_hu_xin_xi yhxx2 on pl.yong_hu_xin_xi_id=yhxx2.id
+        where tz.id = #{id}
     </select>
 
     <!--根据条件查询当前表的满足条件的个数-->
@@ -49,13 +73,10 @@
     <!--通过实体作为筛选条件查询-->
     <select id="chaXunFenYe" resultMap="TieZhiMap">
         select
-        <include refid="Beas_Column_List"/>
-        from jiudianguanli.tie_zhi
-        <where>
-            <if test="mingCheng != null and mingCheng != ''">
-                mingCheng like "%"#{mingCheng}"%"
-            </if>
-        </where>
+            tz.id tid, biao_ti, miao_shu, biao_qian, chuan_jian_shi_jian, chuan_jian_ren,
+            yue_du_shu, ping_lun_shu pls, dian_zhan_shu, lei_xing,yhxx.id yid,yhxx.yong_hu_tou_xiang
+        from jiudianguanli.tie_zhi tz left join yong_hu_xin_xi yhxx
+                                                on tz.chuan_jian_ren=yhxx.yong_hu_ming
         limit #{xiaBiao},10;
     </select>
 
@@ -102,6 +123,9 @@
             </if>
         </set>
         where id = #{id}
+    </update>
+    <update id="gengXinplsById">
+        update tie_zhi set ping_lun_shu=#{count} where id=#{tieZhiId}
     </update>
 
     <!--通过主键删除-->

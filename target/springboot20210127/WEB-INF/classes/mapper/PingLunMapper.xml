@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxa.springbootmain.mapper.PingLunMapper">
+
+    <resultMap type="com.gxa.springbootmain.pojo.PingLun" id="PingLunMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="tieZhiId" column="tie_zhi_id" jdbcType="INTEGER"/>
+        <result property="leiXing" column="lei_xing" jdbcType="INTEGER"/>
+        <result property="yongHuXinXiId" column="yong_hu_xin_xi_id" jdbcType="INTEGER"/>
+        <result property="chuangJianShiJian" column="chuang_jian_shi_jian" jdbcType="TIMESTAMP"/>
+        <result property="gengXinShiJian" column="geng_xin_shi_jian" jdbcType="TIMESTAMP"/>
+        <result property="dianZanShu" column="dian_zan_shu" jdbcType="INTEGER"/>
+        <result property="huiFu" column="hui_fu" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Beas_Column_List">
+        id, tie_zhi_id, lei_xing, yong_hu_xin_xi_id, chuang_jian_shi_jian, geng_xin_shi_jian, dian_zan_shu, hui_fu
+    </sql>
+
+    <!--查询所有主键和名称-->
+    <select id="chaXunAll" resultMap="PingLunMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.ping_lun
+    </select>
+
+    <!--查询单个-->
+    <select id="chaXunById" resultMap="PingLunMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.ping_lun
+        where id = #{id}
+    </select>
+
+    <!--根据条件查询当前表的满足条件的个数-->
+    <select id="chaXunCount" resultType="int">
+        select
+        count(id)
+        from jiudianguanli.ping_lun
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="chaXunFenYe" resultMap="PingLunMap">
+        select
+        <include refid="Beas_Column_List"/>
+        from jiudianguanli.ping_lun
+        <where>
+            <if test="mingCheng != null and mingCheng != ''">
+                mingCheng like "%"#{mingCheng}"%"
+            </if>
+        </where>
+        limit #{xiaBiao},10;
+    </select>
+    <select id="chaXunCountById" resultType="java.lang.Integer">
+        select  count(*) from ping_lun where tie_zhi_id=#{id}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="xinZeng" parameterType="com.gxa.springbootmain.pojo.PingLun">
+        insert into ping_lun(tie_zhi_id, lei_xing, yong_hu_xin_xi_id, chuang_jian_shi_jian, geng_xin_shi_jian, dian_zan_shu, hui_fu)
+        values (#{tieZhiId}, #{leiXing}, #{yongHuXinXiId}, #{chuangJianShiJian}, #{gengXinShiJian},
+        #{dianZanShu}, #{huiFu})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="gengXinById" parameterType="com.gxa.springbootmain.pojo.PingLun">
+        update jiudianguanli.ping_lun
+        <set>
+            <if test="tieZhiId != null">
+                tie_zhi_id = #{tieZhiId},
+            </if>
+            <if test="leiXing != null">
+                lei_xing = #{leiXing},
+            </if>
+            <if test="yongHuXinXiId != null">
+                yong_hu_xin_xi_id = #{yongHuXinXiId},
+            </if>
+            <if test="chuangJianShiJian != null">
+                chuang_jian_shi_jian = #{chuangJianShiJian},
+            </if>
+            <if test="gengXinShiJian != null">
+                geng_xin_shi_jian = #{gengXinShiJian},
+            </if>
+            <if test="dianZanShu != null">
+                dian_zan_shu = #{dianZanShu},
+            </if>
+            <if test="huiFu != null and huiFu != ''">
+                hui_fu = #{huiFu},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="gengXinPingLunShuById">
+        update ping_lun set ping_lun_shu=#{count} where id=#{pingLunId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="shanChuById">
+        delete
+        from jiudianguanli.ping_lun
+        where id = #{id}
+    </delete>
+
+</mapper>

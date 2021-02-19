@@ -6,6 +6,8 @@ import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -61,6 +63,23 @@ public class YongHuXinXiController {
         return this.yongHuXinXiServiceImpl.chaXunAll();
     }
 
+    @RequestMapping(value = "chaXun", method = RequestMethod.GET)
+    @ApiOperation(value = "查询所有数据接口", notes = "查询所有数据接口", httpMethod = "GET")
+    public Map<String, Object> chaXun(HttpServletRequest request) {
+        Object object=request.getSession().getAttribute("user");
+        Map<String, Object> map=new HashMap<>();
+        if(object!=null){
+            map.put("code",200);
+            map.put("msg","查询成功");
+            map.put("data",object);
+            return map;
+        }else{
+            map.put("code",405);
+            map.put("msg","没有登录");
+            return map;
+        }
+
+    }
     /**
      * 通过主键删除单条数据
      *

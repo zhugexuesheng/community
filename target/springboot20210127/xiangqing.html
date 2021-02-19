@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script src="jquery/jquery-3.5.1.js" type="application/javascript"></script>
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">酒店社区</span>
+            </button>
+            <a class="navbar-brand" href="luntanindex.html">酒店社区</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索问题">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" th:if="${session.user!=null}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <div class="layui-inline">
+                            <img id="myimg" src="http://localhost:8080/img/zyj/touxiang/img03.png" style="width: 38px;height: 38px" class="layui-circle">
+                        </div>
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">信息中心</a></li>
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="#">退出登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid" style="background-color: #00F7DE">
+        <div class="row" style="margin: 15px;background-color: white">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+                <span aria-hidden="true" style="margin-left: 50px;margin-top:15px;font-size: large">
+                     <input id="biaoTi" style="border: none;display: inline;width: 50%" readonly type="text" name="title" lay-verify="title" autocomplete="off"  class="layui-input" > </span>
+                     <div id="jinbenxinxi"></div>
+                <hr>
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="margin-left: 30px;font-size: large">
+                            <div>
+                                <img id="tiezhiimg" src="http://localhost:8080/img/zyj/touxiang/img04.png" style="width: 38px;height: 38px" class="layui-circle">
+                                <input id="miaoShu" readonly  style="border: none;margin-left: 10px;width: 80%">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+<hr>
+                <div id="pingluns" >
+
+                        </div>
+                <form class="layui-form" action="" style="margin-left: -80px;margin-bottom: 20px">
+                    <div class="layui-form-item layui-form-text">
+                        <div class="layui-input-block">
+                            <textarea id="pinglunneirong" placeholder="请输入内容" class="layui-textarea" name="desc"></textarea>
+                        </div>
+                    </div>
+                </form>
+                <button id="fabupinglun" type="button" class="layui-btn layui-btn-primary"style="margin-left: 80px;">发布</button>
+            </div>
+
+
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+                <div class="layui-input-block" style="margin-left: 50px;margin-top:25px;">
+                    <h3 style="font-weight: bold">问题发起指南</h3>
+                    <h3 style="font-size: large">Spring Boot是由Pivotal团队提供的全新框架，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。通过这种方式，Spring Boot致力于在蓬勃发展的快速应用开发领域(rapid application development)成为领导者。</h3>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</nav>
+<script src="layui/layui.js"></script>
+<script src="jquery/jquery-3.5.1.js"></script>
+<script>
+    var tieZhiId;
+    var yongHuXinXiId;
+    function erhipinglunhuifu(ids) {
+        var pingLunId=ids;
+        var pingLunNeiRong=$("#huifu"+ids).val();
+        var yongHuXinXiIdre=yongHuXinXiId;
+        $.ajax({
+            url:"/erJiPingLun/xinZeng",   // 请求路径
+            type:"Post",            // 请求的方式，不区分大小写
+            async:true,             // 是否异步，true是默认值，false为同步请求
+            cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype:"text",        // 返回类型，text文本、html页面、json数据
+            contentType:"application/json;charset=utf-8",
+            data:JSON.stringify({
+                pingLunId:pingLunId,
+                pingLunNeiRong:pingLunNeiRong,
+                yongHuXinXiId:yongHuXinXiIdre
+            }),
+            success:function(response){
+                if(response.code===200){
+                    var tags=document.getElementById(ids);
+                    $("#"+ids).removeClass("in");
+                    tags.removeAttribute("commit");
+                    erjipinglun(ids)
+                  }else{
+                    alert(response.msg);
+                }
+            },
+            error:function(response){
+                alert("出错" + response);
+            }
+        });
+    }
+    function erjipinglun(id){
+        $("#"+id).empty();
+        var tags=document.getElementById(id);
+        if(tags.getAttribute("commit")==null){
+            $.ajax({
+                url:"/erJiPingLun/chaXunByPingLunId",   // 请求路径
+                type:"Post",            // 请求的方式，不区分大小写
+                async:true,             // 是否异步，true是默认值，false为同步请求
+                cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                datatype:"text",        // 返回类型，text文本、html页面、json数据
+                data:{
+                    id:id
+                },
+                success:function(response){
+                    if(response.code===200){
+                        var erjipingluns=response.data;
+
+                        for(var i=0;i<erjipingluns.length;i++){
+                            $("#"+id).append("<div style='margin-left: 50px;height: auto' >\n" +
+                                "                                            <div>\n" +
+                                "                                                <img  src='"+erjipingluns[i].yongHuXinXi.yongHuTouXiang+"' style='width: 38px;height: 38px' class='layui-circle'>\n" +
+                                "                                                <div  readonly  style='border: none;margin-left: 10px;width: 70%;display: inline' >"+erjipingluns[i].pingLunNeiRong+"</div>\n" +
+                                "                                                <h4 style='font-size: 10px'>"+erjipingluns[i].yongHuXinXi.yongHuMing+" "+erjipingluns[i].pingLunShiJian+"</h4>\n" +
+                                "                                            </div>\n" +
+                                "                                            <hr>\n" +
+                                "                                        </div>")
+                        }
+                        $('#'+id).append(" <input id='huifu"+id+"' style='margin-left: 50px;width: 70%;display: inline' type='text' name='title' lay-verify='title' autocomplete='off' placeholder='请输入标题' class='layui-input'><button type='button' class='layui-btn' onclick='erhipinglunhuifu("+id+")'>回复</button>")
+                    }else{
+                        alert(response.msg);
+                    }
+                },
+                error:function(response){
+                    alert("出错" + response);
+                }
+            });
+
+            $("#"+id).append("")
+            $("#"+id).addClass("in")
+            tags.setAttribute("commit","in")
+
+        }else{
+            $("#"+id).removeClass("in")
+            tags.removeAttribute("commit")
+        }
+    }
+
+    $("#fabupinglun").click(function () {
+        var huiFu=$("#pinglunneirong").val();
+        $.ajax({
+            url:"/pingLun/xinZeng",   // 请求路径
+            type:"Post",            // 请求的方式，不区分大小写
+            async:false,             // 是否异步，true是默认值，false为同步请求
+            cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype:"text",        // 返回类型，text文本、html页面、json数据
+            contentType:"application/json;charset=utf-8",
+            data:JSON.stringify({
+                tieZhiId:tieZhiId,
+                yongHuXinXiId:yongHuXinXiId,
+                huiFu,huiFu
+            }),
+            success:function(response){
+                if(response.code===200){
+                   window.location.href="xiangqing.html?id="+tieZhiId
+                }else{
+                    alert(response.msg);
+                }
+            },
+            error:function(response){
+                alert("出错" + response);
+            }
+        });
+    })
+    $(function () {
+        var user;
+        $.ajax({
+            url:"/yongHuXinXi/chaXun",   // 请求路径
+            type:"Get",            // 请求的方式，不区分大小写
+            async:true,             // 是否异步，true是默认值，false为同步请求
+            cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype:"text",        // 返回类型，text文本、html页面、json数据
+            data:{
+            },
+            success:function(response){
+                if(response.code===200){
+                    user=response.data;
+                    $("#myimg").get(0).src = response.data.yongHuTouXiang;
+                    yongHuXinXiId=response.data.id;
+
+                }else{
+                    alert(response.msg);
+                }
+            },
+            error:function(response){
+                alert("出错" + response);
+            }
+        });
+
+        var url=window.location.href;
+        var urls = url.split("=");
+        console.log(urls[1])
+           $.ajax({
+               url:"/tieZhi/ChaXunById",   // 请求路径
+               type:"Post",            // 请求的方式，不区分大小写
+               async:true,             // 是否异步，true是默认值，false为同步请求
+               cache:false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+               datatype:"text",        // 返回类型，text文本、html页面、json数据
+               data:{
+                  id:urls[1]
+               },
+               success:function(response){
+                   if(response.code===200){
+                       console.log(response.data)
+                       tieZhiId=response.data.id;
+                       $("#biaoTi").val(response.data.biaoTi);
+                       $("#miaoShu").val(response.data.miaoShu);
+                       $("#tiezhiimg").get(0).src=response.data.yongHuXinXi.yongHuTouXiang;
+                       $("#jinbenxinxi").append("<h4 style='margin-left: 60px'>创建人: "+response.data.chuanJianRen+" 创建时间: "+response.data.chuanJianShiJian+" 评论数: "+response.data.pingLun.length+" 浏览次数: "+response.data.yueDuShu+"</h4>")
+                       var pingluns=response.data.pingLun;
+                       console.log(pingluns.length)
+                       for(var i=0;i<pingluns.length;i++){
+                          if(pingluns[i].yongHuXinXi.yongHuMing!=null){
+                              $("#pingluns").append("<div class='layui-form-item'>\n" +
+                                  "                            <div class='layui-input-block' style='margin-left: 30px;font-size: large'>\n" +
+                                  "                                <div>\n" +
+                                  "                                    <div style='float:left'><img  src='"+pingluns[i].yongHuXinXi.yongHuTouXiang+"' style='width: 38px;height: 38px' class='layui-circle'>\n" +
+                                  "                                        <h4 style='font-size: 10px'>"+pingluns[i].yongHuXinXi.yongHuMing+"</h4>\n" +
+                                  "                                    </div>\n" +
+                                  "                                    <div  readonly  style='float:left;border: none;margin-left: 10px;width: 80%' >"+pingluns[i].huiFu+"</div>\n" +
+                                  "                                    <button style='background-color: white;border: none'  data-toggle='collapse' data-target='#collapseExample' aria-expanded='false' aria-controls='collapseExample' onclick='erjipinglun("+pingluns[i].id+")'>\n" +
+                                  "                                        <i class='layui-icon layui-icon-reply-fill' style='font-size: 15px; color: #1E9FFF;'>"+pingluns[i].pingLunShu+"</i>\n" +
+                                  "                                    </button>\n" +
+                                  "                                    <div class='collapse' id='"+pingluns[i].id+"' style='border: 1px solid #000;margin-top: 30px;margin-left: 45px;margin-right: 50px;background-color: #d5eeff' >\n" +
+                                  "                                    </div>\n" +
+                                  "                                    </div>\n" +
+                                  "                                </div>\n" +
+                                  "                             </div>")
+                          }
+                       }
+                   }else{
+                       alert(response.msg);
+                   }
+               },
+               error:function(response){
+                   alert("出错" + response);
+               }
+           });
+    })
+</script>
+</body>
+</html>
